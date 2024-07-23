@@ -1,6 +1,4 @@
-import { calculateInvestmentResults, formatter } from "../util/investment";
-
-
+import { calculateInvestmentResults, formatter, formatterToVND } from "../util/investment";
 
 
 export default function TableResult({ input }) {
@@ -32,10 +30,10 @@ export default function TableResult({ input }) {
                         <tr key={data.year}>
 
                             <td>{data.year}</td>
-                            <td>{formatter.format(data.valueEndOfYear)}</td>
-                            <td>{formatter.format(data.interest)}</td>
-                            <td>{formatter.format(totalInterest)}</td>
-                            <td>{formatter.format(totalAmountInvestment)}</td>
+                            <td>{formatterToVND.format(data.valueEndOfYear)}</td>
+                            <td>{formatterToVND.format(data.interest)}</td>
+                            <td>{formatterToVND.format(totalInterest)}</td>
+                            <td>{formatterToVND.format(totalAmountInvestment)}</td>
                         </tr>
                     )
                 })}
