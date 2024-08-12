@@ -1,35 +1,44 @@
-import { useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import QUESTIONS from "../questions"
 
+import QuestionTimer from "./QuestionTimer";
+import Answer from "./Answer";
+import Question from "./Question";
+import Summary from "./Summary";
+
 export default function Quiz() {
+
+    //const shuffleAnswers = useRef(); //use ref đc sử dụng để quản lý biến shuffle ngoài life-cycle của react, tức là ngăn ngừa việc tạo mới biến này
     const [userAnswers, setUserAnswers] = useState([]);
 
     const acticeQuestionIndex = userAnswers.length
+    const quizIsComplete = acticeQuestionIndex === QUESTIONS.length;
 
-    const shuffleAnswers = [...QUESTIONS[acticeQuestionIndex].answers];
-    shuffleAnswers.sort(() => Math.random() - 0.5); //shuffle các câu trả lời trc khi render ra view, vì câu trả lời mặc định luôn là đầu tiền
-
-    function handleSelectAnswer(selectedAnswer) {
+    const handleSelectAnswer = useCallback(function handleSelectAnswer(selectedAnswer) {
         setUserAnswers(prevUserAnswer => {
             return [
                 ...prevUserAnswer,
                 selectedAnswer
             ]
         });
+       
+    }, [])
+
+    const handleSkipAnswer = useCallback(() => handleSelectAnswer(null), [handleSelectAnswer])
+
+    if (quizIsComplete) {
+        return <Summary userAnswers={userAnswers}/>
     }
+
 
     return (
         <div id="quiz">
-            <div id='question'>
-                <p>{QUESTIONS[acticeQuestionIndex].text}</p>
-                <ul id="answers">
-                    {shuffleAnswers.map((answer) => (
-                        <li key={answer} className="answer">
-                            <button onClick={() => handleSelectAnswer(answer)}>{answer}</button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <Question
+                key={acticeQuestionIndex}
+                questionIndex={acticeQuestionIndex}
+                onSelectAnswer={handleSelectAnswer}
+                onSkipAnswer={handleSkipAnswer}
+                />
         </div>
     )
 }

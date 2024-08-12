@@ -1,0 +1,35 @@
+export async function fetchAvailablePlaces() {
+    const resp = await fetch('http://localhost:3000/places')
+    const resData = await resp.json();
+    if (!resp.ok) {
+        throw new Error('Failed to fetch places')
+    }
+    return resData.places;
+}
+
+export async function updateUserPlace(places) {
+    const resp = await fetch('http://localhost:3000/user-places', {
+        method: 'PUT',
+        body: JSON.stringify({ places }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const resData = await resp.json();
+
+    if (!resp.ok) {
+        throw new Error('Failed to update user data');
+    }
+
+    return resData.message
+}
+
+export async function fetchUserPlaces() {
+    const resp = await fetch('http://localhost:3000/user-places')
+    const resData = await resp.json();
+    if (!resp.ok) {
+        throw new Error('Failed to fetch user places')
+    }
+    return resData.places;
+}
